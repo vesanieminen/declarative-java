@@ -1,7 +1,14 @@
 # declarative-java
+
 Make java behave more like declarative programming language when defining Vaadin UIs
 
+Writing UIs for Vaadin Flow can easily lead into messy code when there are lots of component hierarchy being defined.
+Java is imperative programming language while user interface definitions usually are more suited for declarative
+languages. There are workarounds like adding fluid API that Viritin add-on is doing, but this is added dependency and
+not vanilla anymore.
+
 Do you prefer this
+
 ```java
 NativeLabel quoteLabel = new NativeLabel("""
         There is a tide in the affairs of men, Which taken at the flood, 
@@ -16,7 +23,9 @@ NativeLabel shakespeareLabel = new NativeLabel(" -William Shakespeare");
 shakespeareLabel.addClassNames(LumoUtility.FontWeight.BOLD);
 Div contentDiv = new Div(quoteLabel, shakespeareLabel);
 ```
-or this 
+
+or this
+
 ```java
 Div contentDiv = new Div(
     new NativeLabel("""
@@ -36,10 +45,12 @@ Div contentDiv = new Div(
 ```
 
 Pros
+
 - Flow of the code follows the structure of the UI
 - No need to invent names to variables that are being only added to a layout shortly after construction
 
 Cons
+
 - Style somewhat unfamiliar in developer community
 - Refactoring the hierarchy is manual work without refactoring tool help
 

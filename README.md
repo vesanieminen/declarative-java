@@ -43,4 +43,4 @@ Cons
 - Style somewhat unfamiliar in developer community
 - Refactoring the hierarchy is manual work without refactoring tool help
 
-Larger [example](src/main/java/org/samuliwritescode/declarativejava/MainRoute.java:L30)
+Larger [example](src/main/java/org/samuliwritescode/declarativejava/MainRoute.java#L30)

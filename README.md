@@ -1,11 +1,15 @@
-# declarative-java
+# Declarative Java
 
-Make java behave more like declarative programming language when defining Vaadin UIs
+### Make Java behave more like declarative programming language when defining Vaadin UIs
 
 Writing UIs for Vaadin Flow can easily lead into messy code when there are lots of component hierarchy being defined.
-Java is imperative programming language while user interface definitions usually are more suited for declarative
-languages. There are workarounds like adding fluid API that Viritin add-on is doing, but this is added dependency and
-not vanilla anymore.
+Java is an imperative programming language, while user interface definitions usually are more suited for declarative
+programming languages. There are workarounds like using fluid API that for example Viritin add-on is doing, but this is
+now added dependency. Also you could consider using some other JVM language, like Kotlin, but that is not vanilla Java
+anymore.
+
+If you are limited to plain Java, then you could consider less commonly used, but part of the language syntax of
+anonymous class with initializer block: {{ ... }}
 
 Do you prefer this
 
@@ -44,14 +48,23 @@ Div contentDiv = new Div(
 );
 ```
 
-Pros
+Setters are being moved inside the anonymous instantiation and thus not requiring referencing instances of NativeLabels
+by variables, leading into call structure that is more align on resulting HTML hierarchy and with bonus of NativeLabel
+instances kept off the variable scope.
+
+### Pros
 
 - Flow of the code follows the structure of the UI
 - No need to invent names to variables that are being only added to a layout shortly after construction
+- Less chance of accidentally calling a setter on wrong variable because they pollute the same scope
 
-Cons
+### Cons
 
 - Style somewhat unfamiliar in developer community
 - Refactoring the hierarchy is manual work without refactoring tool help
+- Slight overhead on memory because of anonymous classes being instantiated
 
 Larger [example](src/main/java/org/samuliwritescode/declarativejava/MainRoute.java#L30)
+
+There are no absolute right or wrongs here and if you search the internet about this topic, it is going to be
+opinionated. You can decide what is yours and use or not use this style. 

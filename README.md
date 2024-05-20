@@ -69,8 +69,4 @@ instances kept off the variable scope.
 Larger [example](src/main/java/org/samuliwritescode/declarativejava/MainRoute.java#L30)
 
 There are no absolute right or wrongs here and if you search the internet about this topic, it is going to be
-opinionated. You can decide what is yours and use or not use this style. 
-
-## Alternatives
-### Fluent API
-### Functional style
+opinionated. You can decide what is yours and use or not use this style.

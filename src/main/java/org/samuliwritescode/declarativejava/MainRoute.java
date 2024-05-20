@@ -28,49 +28,53 @@ public class MainRoute extends Div {
     }
 
     private Component createContentWithDeclarativeStyle() {
-        return new Div(
-                new Div(
-                        new Span(
-                                new Div(
-                                        new NativeLabel("There is a tide in the affairs of men, Which taken at the flood, leads on to fortune. Omitted, all the voyage of their life is bound in shallows and in miseries. On such a full sea are we now afloat. And we must take the current when it serves, or lose our ventures.") {{
-                                            addClassNames(LumoUtility.FontSize.MEDIUM);
-                                        }},
-                                        new NativeLabel(" -William Shakespeare") {{
-                                            addClassNames(LumoUtility.FontWeight.BOLD);
-                                        }}
-                                ),
-                                new Button("Open in a dialog", VaadinIcon.CODE.create(), e -> new Dialog() {{
-                                    add(new Button("", VaadinIcon.CLOSE.create(), e -> close()) {{
-                                        addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY_INLINE);
-                                    }});
-                                    add(createContentWithDeclarativeStyle());
-                                    open();
-                                }}) {{
-                                    addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-                                }}
-                        ) {{
-                            addClassNames(
-                                    LumoUtility.Display.FLEX,
-                                    LumoUtility.Gap.MEDIUM,
-                                    LumoUtility.FlexDirection.COLUMN,
-                                    LumoUtility.AlignItems.CENTER
-                            );
-                        }}
-                ) {{
+        return new Div() {{
+            add(new Div() {{
+                add(new Span() {{
+                    add(new Div() {{
+                        add(new NativeLabel() {{
+                            setText("There is a tide in the affairs of men, Which taken at the flood, leads on to fortune. Omitted, all the voyage of their life is bound in shallows and in miseries. On such a full sea are we now afloat. And we must take the current when it serves, or lose our ventures.");
+                            addClassNames(LumoUtility.FontSize.MEDIUM);
+                        }});
+                        add(new NativeLabel() {{
+                            setText(" -William Shakespeare");
+                            addClassNames(LumoUtility.FontWeight.BOLD);
+                        }});
+                    }});
+                    add(new Button() {{
+                        setText("Open in a dialog");
+                        setIcon(VaadinIcon.CODE.create());
+                        addClickListener(e -> new Dialog() {{
+                            add(new Button() {{
+                                setIcon(VaadinIcon.CLOSE.create());
+                                addClickListener(e -> close());
+                                addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY_INLINE);
+                            }});
+                            add(createContentWithDeclarativeStyle());
+                            open();
+                        }});
+                        addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                    }});
                     addClassNames(
                             LumoUtility.Display.FLEX,
-                            LumoUtility.JustifyContent.CENTER,
-                            LumoUtility.AlignItems.CENTER,
-                            LumoUtility.Padding.LARGE,
-                            LumoUtility.Margin.XLARGE,
-                            LumoUtility.Border.ALL,
-                            LumoUtility.BorderRadius.MEDIUM,
-                            LumoUtility.BorderColor.CONTRAST_20,
-                            LumoUtility.Background.CONTRAST_10,
-                            LumoUtility.BoxShadow.SMALL
+                            LumoUtility.Gap.MEDIUM,
+                            LumoUtility.FlexDirection.COLUMN,
+                            LumoUtility.AlignItems.CENTER
                     );
-                }}
-        ) {{
+                }});
+                addClassNames(
+                        LumoUtility.Display.FLEX,
+                        LumoUtility.JustifyContent.CENTER,
+                        LumoUtility.AlignItems.CENTER,
+                        LumoUtility.Padding.LARGE,
+                        LumoUtility.Margin.XLARGE,
+                        LumoUtility.Border.ALL,
+                        LumoUtility.BorderRadius.MEDIUM,
+                        LumoUtility.BorderColor.CONTRAST_20,
+                        LumoUtility.Background.CONTRAST_10,
+                        LumoUtility.BoxShadow.SMALL
+                );
+            }});
             addClassNames(
                     LumoUtility.Display.FLEX,
                     LumoUtility.JustifyContent.CENTER,

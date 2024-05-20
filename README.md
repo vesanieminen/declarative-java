@@ -31,21 +31,23 @@ Div contentDiv = new Div(quoteLabel, shakespeareLabel);
 or this
 
 ```java
-Div contentDiv = new Div(
-    new NativeLabel("""
-        There is a tide in the affairs of men, Which taken at the flood, 
-        leads on to fortune. Omitted, all the voyage of their life is 
-        bound in shallows and in miseries. 
-        On such a full sea are we now afloat. 
-        And we must take the current when it serves, 
-        or lose our ventures.
-    """) {{
+Div contentDiv = new Div() {{
+    add(new NativeLabel() {{
+        setText("""
+                There is a tide in the affairs of men, Which taken at the flood, 
+                leads on to fortune. Omitted, all the voyage of their life is 
+                bound in shallows and in miseries. 
+                On such a full sea are we now afloat. 
+                And we must take the current when it serves, 
+                or lose our ventures.
+                """);
         addClassNames(LumoUtility.FontSize.MEDIUM);
-    }},
-    new NativeLabel(" -William Shakespeare") {{
+    }});
+    add(new NativeLabel() {{
+        setText(" -William Shakespeare");
         addClassNames(LumoUtility.FontWeight.BOLD);
-    }}
-);
+    }});
+}};
 ```
 
 Setters are being moved inside the anonymous instantiation and thus not requiring referencing instances of NativeLabels
@@ -68,3 +70,7 @@ Larger [example](src/main/java/org/samuliwritescode/declarativejava/MainRoute.ja
 
 There are no absolute right or wrongs here and if you search the internet about this topic, it is going to be
 opinionated. You can decide what is yours and use or not use this style. 
+
+## Alternatives
+### Fluent API
+### Functional style

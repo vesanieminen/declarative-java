@@ -1,0 +1,16 @@
+vaadin-grid::part(column-selector-header) {
+    position: absolute;
+    right: 0;
+    z-index: 9999;
+}
+
+vaadin-grid-cell-content:has(.column-selector-menu) {
+    padding: 0;
+}
+
+.column-selector-menu {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+}

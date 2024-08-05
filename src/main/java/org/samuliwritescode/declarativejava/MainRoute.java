@@ -2,12 +2,16 @@ package org.samuliwritescode.declarativejava;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasLabel;
+import com.vaadin.flow.component.HtmlContainer;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
@@ -26,8 +30,10 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 @Route("")
@@ -139,7 +145,58 @@ public class MainRoute extends Div implements AppShellConfigurator {
         binder.setBean(null);
     }
 
+    private Div div(HasComponents parent, Consumer<Div> divConsumer) {
+        final var div = new Div();
+        parent.add(div);
+        divConsumer.accept(div);
+        return div;
+    }
+
+    private <T extends HtmlContainer> T add(HasComponents parent, Class<T> elementClass, Consumer<T> elementConsumer) {
+        final T element;
+        try {
+            element = elementClass.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        elementConsumer.accept(element);
+        parent.add(element);
+        return element;
+    }
+
     private Component createContentWithDeclarativeStyle() {
+        div(this, divParent -> {
+            divParent.setId("parent");
+            div(divParent, div -> {
+                div.setId("child 1");
+            });
+            div(divParent, div -> {
+                div.setId("child 2");
+            });
+        });
+
+        add(this, Div.class, div -> {
+            div.addClassNames(LumoUtility.Display.FLEX);
+            add(div, H1.class, h1 -> {
+                h1.setText("Header 1");
+                h1.addClassNames(
+                        LumoUtility.TextColor.PRIMARY,
+                        LumoUtility.FontWeight.EXTRABOLD
+                );
+            });
+            add(div, Div.class, content -> {
+                content.addClassNames(
+                        LumoUtility.Display.FLEX,
+                        LumoUtility.FlexDirection.COLUMN,
+                        LumoUtility.Gap.LARGE
+                );
+                add(content, Span.class, span -> {
+                    span.setText("Content");
+                    span.addClassNames(LumoUtility.FontWeight.BOLD);
+                });
+            });
+        });
+
         return new Div() {{
             add(new Div() {{
                 add(new Div() {{

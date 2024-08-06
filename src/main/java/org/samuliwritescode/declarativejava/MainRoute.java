@@ -135,68 +135,21 @@ public class MainRoute extends Div implements AppShellConfigurator {
 
         Component content = createContentWithDeclarativeStyle();
         Component content2 = createContentWithImperativeStyle();
+        Component content3 = createContentWithAlternativeDeclarativeStyle();
         content.getElement().getStyle().set("width", "100%");
         content.getElement().getStyle().set("height", "50%");
         content2.getElement().getStyle().set("width", "100%");
         content2.getElement().getStyle().set("height", "50%");
+        content3.getElement().getStyle().set("width", "100%");
+        content3.getElement().getStyle().set("height", "50%");
         add(content);
         add(content2);
+        add(content3);
 
         binder.setBean(null);
     }
 
-    private Div div(HasComponents parent, Consumer<Div> divConsumer) {
-        final var div = new Div();
-        parent.add(div);
-        divConsumer.accept(div);
-        return div;
-    }
-
-    private <T extends HtmlContainer> T add(HasComponents parent, Class<T> elementClass, Consumer<T> elementConsumer) {
-        final T element;
-        try {
-            element = elementClass.getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        elementConsumer.accept(element);
-        parent.add(element);
-        return element;
-    }
-
     private Component createContentWithDeclarativeStyle() {
-        div(this, divParent -> {
-            divParent.setId("parent");
-            div(divParent, div -> {
-                div.setId("child 1");
-            });
-            div(divParent, div -> {
-                div.setId("child 2");
-            });
-        });
-
-        add(this, Div.class, div -> {
-            div.addClassNames(LumoUtility.Display.FLEX);
-            add(div, H1.class, h1 -> {
-                h1.setText("Header 1");
-                h1.addClassNames(
-                        LumoUtility.TextColor.PRIMARY,
-                        LumoUtility.FontWeight.EXTRABOLD
-                );
-            });
-            add(div, Div.class, content -> {
-                content.addClassNames(
-                        LumoUtility.Display.FLEX,
-                        LumoUtility.FlexDirection.COLUMN,
-                        LumoUtility.Gap.LARGE
-                );
-                add(content, Span.class, span -> {
-                    span.setText("Content");
-                    span.addClassNames(LumoUtility.FontWeight.BOLD);
-                });
-            });
-        });
-
         return new Div() {{
             add(new Div() {{
                 add(new Div() {{
@@ -333,6 +286,199 @@ public class MainRoute extends Div implements AppShellConfigurator {
             );
         }};
     }
+
+    private Div div(HasComponents parent, Consumer<Div> divConsumer) {
+        final var div = new Div();
+        if (parent != null) {
+            parent.add(div);
+        }
+        divConsumer.accept(div);
+        return div;
+    }
+
+    private Button button(HasComponents parent, Consumer<Button> buttonConsumer) {
+        final var button = new Button();
+        if (parent != null) {
+            parent.add(button);
+        }
+        buttonConsumer.accept(button);
+        return button;
+    }
+
+    private Grid<GridDTO> gridDTO(HasComponents parent, Consumer<Grid<GridDTO>> gridConsumer) {
+        final var grid = new Grid<GridDTO>();
+        if (parent != null) {
+            parent.add(grid);
+        }
+        gridConsumer.accept(grid);
+        return grid;
+    }
+
+    private IntegerField integerField(HasComponents parent, Consumer<IntegerField> integerFieldConsumer) {
+        final var integerField = new IntegerField();
+        if (parent != null) {
+            parent.add(integerField);
+        }
+        integerFieldConsumer.accept(integerField);
+        return integerField;
+    }
+
+    private TextField textField(HasComponents parent, Consumer<TextField> textFieldConsumer) {
+        final var textField = new TextField();
+        if (parent != null) {
+            parent.add(textField);
+        }
+        textFieldConsumer.accept(textField);
+        return textField;
+    }
+
+    private TextArea textArea(HasComponents parent, Consumer<TextArea> textAreaConsumer) {
+        final var textArea = new TextArea();
+        if (parent != null) {
+            parent.add(textArea);
+        }
+        textAreaConsumer.accept(textArea);
+        return textArea;
+    }
+
+    private Component createContentWithAlternativeDeclarativeStyle() {
+        return div(null, container -> {
+            div(container, innerDiv -> {
+                div(innerDiv, firstRow -> {
+                    div(firstRow, heading -> {
+                        heading.setText("A simple CRUD editor instantiated with alternative declarative manner");
+                        heading.addClassNames(LumoUtility.FontSize.XLARGE, LumoUtility.FontWeight.BOLD);
+                    });
+                    div(firstRow, spacer -> {
+                        spacer.addClassNames(LumoUtility.Flex.GROW);
+                    });
+                    button(firstRow, button -> {
+                        button.setText("New");
+                        button.addClickListener(e -> onCreateBean());
+                    });
+                    firstRow.addClassNames(
+                            LumoUtility.Display.FLEX,
+                            LumoUtility.AlignContent.START
+                    );
+                });
+                gridDTO(innerDiv, grid -> {
+                    grid.setDataProvider(dataProvider);
+                    grid.addClassNames(LumoUtility.Flex.GROW);
+                    grid.addColumn(d -> "").setHeader("").setWidth("0").setResizable(false).setFlexGrow(0).setHeaderPartName("column-selector-header").setHeader(getColumnSelector(grid));
+                    grid.addColumn(GridDTO::id).setResizable(true).setFlexGrow(1).setHeader("ID");
+                    grid.addColumn(GridDTO::name).setResizable(true).setFlexGrow(1).setHeader(new TextField() {{
+                        addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                        setLabel("Name");
+                        filterBinder.forField(this).bind(GridFilter::getName, GridFilter::setName);
+                    }});
+                    grid.addColumn(GridDTO::description).setResizable(true).setFlexGrow(1).setHeader(new TextField() {{
+                        addThemeVariants(TextFieldVariant.LUMO_SMALL);
+                        setLabel("Description");
+                        filterBinder.forField(this).bind(GridFilter::getDescription, GridFilter::setDescription);
+                    }});
+                    binder.addStatusChangeListener(e -> onBinderStatusChanged(grid));
+                    grid.addSelectionListener(MainRoute.this::onGridSelected);
+                });
+
+                div(innerDiv, formDiv -> {
+                    div(formDiv, fieldsDiv2 -> {
+                        div(fieldsDiv2, fieldsDiv -> {
+                            integerField(fieldsDiv, integerField ->  {
+                                integerField.setLabel("ID");
+                                integerField.setReadOnly(true);
+                                binder.forField(integerField).bind(FormBean::getId, (a, b) -> {
+                                });
+                            });
+
+                            textField(fieldsDiv, textField -> {
+                                textField.setLabel("Name");
+                                binder.forField(textField).bind(FormBean::getName, FormBean::setName);
+                            });
+
+                            fieldsDiv.addClassNames(
+                                    LumoUtility.Display.FLEX,
+                                    LumoUtility.FlexDirection.COLUMN,
+                                    LumoUtility.JustifyContent.BETWEEN
+                            );
+                        });
+
+                        textArea(fieldsDiv2, textArea-> {
+                            textArea.addClassNames(LumoUtility.Flex.GROW);
+                            textArea.setLabel("Description");
+                            binder.forField(textArea).bind(FormBean::getDescription, FormBean::setDescription);
+                        });
+
+                        fieldsDiv2.addClassNames(
+                                LumoUtility.Display.FLEX,
+                                LumoUtility.Gap.MEDIUM,
+                                LumoUtility.Flex.GROW
+                        );
+                    });
+
+                    div(formDiv, formContainerDiv-> {
+                        button(formContainerDiv, saveButton -> {
+                            saveButton.setEnabled(false);
+                            binder.addStatusChangeListener(e -> setEnabled(isCrudControlsEnabled()));
+                            saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                            saveButton.addClickListener(e -> onSaveFormBean());
+                            saveButton.setText("Save");
+                        });
+
+                        button(formContainerDiv, cancelButton -> {
+                            cancelButton.setEnabled(false);
+                            binder.addStatusChangeListener(e -> setEnabled(isCrudControlsEnabled()));
+                            cancelButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+                            cancelButton.addClickListener(e -> onClearFormBean());
+                            cancelButton.setText("Cancel");
+                        });
+
+                        div(formContainerDiv, spacerDiv -> {
+                            addClassNames(LumoUtility.Flex.GROW);
+                        });
+
+                        button(formContainerDiv, deleteButton -> {
+                            deleteButton.setEnabled(false);
+                            binder.addStatusChangeListener(e -> setEnabled(isCrudControlsEnabled()));
+                            deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+                            deleteButton.addClickListener(e -> onDeleteFormBean());
+                            deleteButton.setText("Delete");
+                        });
+
+                        formContainerDiv.addClassNames(
+                                LumoUtility.Display.FLEX,
+                                LumoUtility.Gap.LARGE
+                        );
+                    });
+
+                    formDiv.addClassNames(
+                            LumoUtility.Display.FLEX,
+                            LumoUtility.Gap.MEDIUM,
+                            LumoUtility.FlexDirection.COLUMN
+                    );
+                });
+
+                innerDiv.addClassNames(
+                        LumoUtility.Display.FLEX,
+                        LumoUtility.FlexDirection.COLUMN,
+                        LumoUtility.Gap.MEDIUM,
+                        LumoUtility.Flex.GROW,
+                        LumoUtility.Padding.LARGE,
+                        LumoUtility.Margin.XLARGE,
+                        LumoUtility.Border.ALL,
+                        LumoUtility.BorderRadius.MEDIUM,
+                        LumoUtility.BorderColor.CONTRAST_20,
+                        LumoUtility.Background.CONTRAST_10,
+                        LumoUtility.BoxShadow.SMALL
+                );
+            });
+
+            container.addClassNames(
+                    LumoUtility.Display.FLEX,
+                    LumoUtility.Background.CONTRAST_5
+            );
+        });
+    }
+
 
     private void onCreateBean() {
         binder.setBean(new FormBean(new GridDTO(database.keySet().stream().mapToInt(id -> id).max().orElse(0) + 1, "", "")));
